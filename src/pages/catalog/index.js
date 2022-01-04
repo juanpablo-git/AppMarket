@@ -1,4 +1,7 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
+import api from "../../services/api"
+import {useDispatch} from 'react-redux'
+import * as CartActions from '../../store/modules/cart/action' 
 import {View,Text, FlatList} from 'react-native'
 import { Container,
     ProductContainer,
@@ -14,20 +17,28 @@ import FeaterIcon from 'react-native-vector-icons/Feather';
 import FloatCart from "../../components/floatCart";
 
 export default ()=>{
-    const [produts,setProducts] = useState([
-                                        {   id:1,
-                                            title:"Assinatura trimestral",
-                                            image_url: "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-                                            preco:150},
-                                        {   id:2,
-                                            title:"Assinatura trimestral",
-                                            image_url: "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-                                            preco:150},
-                                        {   id:3,
-                                            title:"Assinatura trimestral",
-                                            image_url: "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-                                            preco:150}])
-   
+    const dispatch = useDispatch()
+    const [produts,setProducts] = useState()
+   useEffect(()=>{
+     
+    async function loadProducts(){
+        try{
+        const {data} = await api.get()
+      
+        setProducts(data.products)
+        console.log("data: ",data.products)
+       
+        }catch(r){
+            console.log(r)
+        }
+    }
+    loadProducts()
+
+   },[])
+
+   function handleAddToCart(id){
+       dispatch(CartActions.addToCartRequest(id))
+   }
     return(
        
     <>
@@ -41,9 +52,9 @@ export default ()=>{
            <ProctTitle>{item.title}</ProctTitle>
            <PriceContainer>
                <ProductPrice>
-                   {item.preco}
+                   {item.price}
                </ProductPrice>
-               <ProductButton onPress={()=>{}}>
+               <ProductButton onPress={()=>handleAddToCart(item.id)}>
                    <ProductButtonText>Adicionar</ProductButtonText>
                    <FeaterIcon size={30} name='plus-circle' color='#d1d7e9' />
                </ProductButton>
@@ -59,7 +70,7 @@ export default ()=>{
       /> 
      
       </ProductContainer>
-     
+    
     </Container>
     <FloatCart />
    </>

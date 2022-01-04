@@ -70,7 +70,7 @@ export default ()=>{
         </ProductContainer>
         <TotalProductsContainer>
             <FeatcherIcon  name="shopping-cart" color="#fff" size={24} />
-            <TotalProductsText>{cartSize} {cartSize == 1 ? "iten" : "itens"}</TotalProductsText>
+            <TotalProductsText>{cartSize} {cartSize === 1 ? 'iten' : 'itens'}</TotalProductsText>
             <SubtotalValue>R$ {cartTotal},00</SubtotalValue>
         </TotalProductsContainer>
 
